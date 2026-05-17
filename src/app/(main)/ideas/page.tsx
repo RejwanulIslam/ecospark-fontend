@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ideasApi, categoriesApi } from "@/lib/api";
+import { ideasApi, categoriesApi, bookmarkApi } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
 import IdeaCard from "@/components/ideas/IdeaCard";
 import IdeaCardSkeleton from "@/components/ideas/IdeaCardSkeleton";
 import { Search, SlidersHorizontal, X } from "lucide-react";
@@ -37,6 +38,17 @@ function IdeasContent() {
     queryKey: ["categories"],
     queryFn: () => categoriesApi.getAll().then((r) => r.data.categories as Category[]),
   });
+
+  const { isAuthenticated } = useAuthStore();
+
+  const { data: bookmarkedIdsData } = useQuery({
+    queryKey: ["bookmarked-ids"],
+    queryFn: () => bookmarkApi.getIds().then((r) => r.data.ideaIds as string[]),
+    enabled: isAuthenticated,
+    staleTime: 30000,
+  });
+
+  const bookmarkedIds = new Set(bookmarkedIdsData ?? []);
 
   const queryParams = {
     page, limit: 12, search: search || undefined, category: category || undefined,
@@ -220,7 +232,7 @@ function IdeasContent() {
             <AnimatePresence mode="popLayout">
               {ideas.map((idea, i) => (
                 <MotionWrapper key={idea.id} variant="slideUp" delay={i * 0.05} layout>
-                  <IdeaCard idea={idea} />
+                  <IdeaCard idea={idea} initialBookmarked={bookmarkedIds.has(idea.id)} />
                 </MotionWrapper>
               ))}
             </AnimatePresence>

@@ -2,7 +2,8 @@
 
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@tanstack/react-query";
-import { ideasApi } from "@/lib/api";
+import { ideasApi, bookmarkApi } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
 import IdeaCard from "@/components/ideas/IdeaCard";
 import IdeaCardSkeleton from "@/components/ideas/IdeaCardSkeleton";
 import Link from "next/link";
@@ -20,6 +21,15 @@ export default function FeaturedIdeas() {
   });
 
   const ideas: Idea[] = data?.ideas ?? [];
+
+  const { isAuthenticated } = useAuthStore();
+  const { data: bookmarkedIdsData } = useQuery({
+    queryKey: ["bookmarked-ids"],
+    queryFn: () => bookmarkApi.getIds().then((r) => r.data.ideaIds as string[]),
+    enabled: isAuthenticated,
+    staleTime: 30000,
+  });
+  const bookmarkedIds = new Set(bookmarkedIdsData ?? []);
 
   return (
     <section ref={ref} className="py-20 bg-background relative overflow-hidden">
@@ -55,7 +65,7 @@ export default function FeaturedIdeas() {
             ? Array.from({ length: 8 }).map((_, i) => <IdeaCardSkeleton key={i} />)
             : ideas.map((idea, i) => (
                 <MotionWrapper key={idea.id} variant="slideUp" delay={i * 0.1}>
-                  <IdeaCard idea={idea} index={i} />
+                  <IdeaCard idea={idea} index={i} initialBookmarked={bookmarkedIds.has(idea.id)} />
                 </MotionWrapper>
               ))}
         </div>

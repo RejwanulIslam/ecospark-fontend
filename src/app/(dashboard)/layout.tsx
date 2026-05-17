@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf, LayoutDashboard, Lightbulb, Users, Settings,
   LogOut, Menu, X, ChevronRight, ShoppingBag,
-  Bell, User, Shield, Sun, Moon, Plus
+  Bell, User, Shield, Sun, Moon, Plus, Heart
 } from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 const memberLinks = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Overview" },
   { href: "/dashboard/ideas", icon: Lightbulb, label: "My Ideas" },
+  { href: "/dashboard/wishlist", icon: Heart, label: "Wishlist" },
   { href: "/dashboard/purchases", icon: ShoppingBag, label: "Purchases" },
   { href: "/dashboard/profile", icon: User, label: "Profile" },
   { href: "/dashboard/settings", icon: Settings, label: "Settings" },
@@ -35,19 +36,34 @@ const adminLinks = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hasHydrated, setHasHydrated] = useState(false);
   const { user, logout, isAuthenticated } = useAuthStore();
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
 
+  // Wait for Zustand to hydrate from localStorage before checking auth
   useEffect(() => {
-    if (!isAuthenticated) router.push("/auth/login");
-  }, [isAuthenticated, router]);
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+    // If already hydrated (e.g. fast load), set immediately
+    if (useAuthStore.persist.hasHydrated()) {
+      setHasHydrated(true);
+    }
+    return () => unsub();
+  }, []);
+
+  useEffect(() => {
+    if (hasHydrated && !isAuthenticated) router.push("/auth/login");
+  }, [hasHydrated, isAuthenticated, router]);
 
   useEffect(() => {
     setSidebarOpen(false);
   }, [pathname]);
 
+  // Show nothing until hydration is done (prevents flash)
+  if (!hasHydrated) return null;
   if (!isAuthenticated || !user) return null;
 
   const navLinks = user.role === "ADMIN" ? adminLinks : memberLinks;

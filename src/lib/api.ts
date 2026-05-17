@@ -87,22 +87,29 @@ export const paymentApi = {
   confirmPayment: (paymentIntentId: string, ideaId: string) =>
     api.post("/payment/confirm", { paymentIntentId, ideaId }),
   checkPurchase: (ideaId: string) => api.get(`/payment/check/${ideaId}`),
-  getMyPurchases: () => api.get("/payment/my-purchases"),
+  getMyPurchases: () => api.get("/payment/purchases"),
 };
 
 export const adminApi = {
-  getStats: () => api.get("/admin/stats"),
+  getStats: () => api.get("/admin/dashboard"),
   getIdeas: (params?: Record<string, string | number | undefined>) =>
     api.get("/admin/ideas", { params }),
-  approveIdea: (id: string) => api.patch(`/admin/ideas/${id}/approve`),
+  approveIdea: (id: string) => api.put(`/admin/ideas/${id}/approve`),
   rejectIdea: (id: string, feedback: string) =>
-    api.patch(`/admin/ideas/${id}/reject`, { feedback }),
+    api.put(`/admin/ideas/${id}/reject`, { feedback }),
   getUsers: (params?: Record<string, string | number | undefined>) =>
     api.get("/admin/users", { params }),
   toggleUserStatus: (id: string) =>
-    api.patch(`/admin/users/${id}/toggle-status`),
+    api.put(`/admin/users/${id}/toggle-status`),
   updateUserRole: (id: string, role: string) =>
-    api.patch(`/admin/users/${id}/role`, { role }),
+    api.put(`/admin/users/${id}/role`, { role }),
+};
+
+export const bookmarkApi = {
+  toggle: (ideaId: string) => api.post(`/bookmarks/${ideaId}`),
+  getAll: () => api.get("/bookmarks"),
+  getIds: () => api.get("/bookmarks/ids"),
+  check: (ideaId: string) => api.get(`/bookmarks/check/${ideaId}`),
 };
 
 export const newsletterApi = {

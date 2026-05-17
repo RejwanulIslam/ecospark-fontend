@@ -7,6 +7,7 @@ import HowItWorksSection from "@/components/home/HowItWorksSection";
 import TopVotedSection from "@/components/home/TopVotedSection";
 import NewsletterSection from "@/components/home/NewsletterSection";
 import CTASection from "@/components/home/CTASection";
+import FAQSection from "@/components/home/FAQSection";
 
 export default function HomePage() {
   return (
@@ -18,6 +19,7 @@ export default function HomePage() {
       <HowItWorksSection />
       <TopVotedSection />
       <TestimonialsSection />
+      <FAQSection />
       <CTASection />
       <NewsletterSection />
     </div>

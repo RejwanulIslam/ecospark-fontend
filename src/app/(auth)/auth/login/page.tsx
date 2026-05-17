@@ -80,8 +80,8 @@ export default function LoginPage() {
     >
       {/* Header */}
       <div className="mb-8">
-        <div className="w-11 h-11 rounded-2xl bg-[var(--color-primary-100)] dark:bg-[var(--color-primary-900)]/40 flex items-center justify-center mb-5 border border-[var(--color-primary-200)] dark:border-[var(--color-primary-800)]/50">
-          <Leaf className="w-5 h-5 text-[var(--color-primary-600)] dark:text-[var(--color-primary-400)]" />
+        <div className="w-11 h-11 rounded-2xl bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center mb-5 border border-primary-200 dark:border-primary-800/50">
+          <Leaf className="w-5 h-5 text-primary-600 dark:text-primary-400" />
         </div>
         <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1.5">
           Welcome back
@@ -96,7 +96,6 @@ export default function LoginPage() {
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
           onError={() => toast.error("Google login failed")}
-          useOneTap
           width="100%"
           theme="outline"
           shape="circle"
@@ -122,7 +121,7 @@ export default function LoginPage() {
         <button
           type="button"
           onClick={() => fillDemo("member")}
-          className="flex-1 py-2 px-3 rounded-lg bg-[var(--color-primary-50)] dark:bg-[var(--color-primary-900)]/20 text-[var(--color-primary-700)] dark:text-[var(--color-primary-400)] text-xs font-semibold border border-[var(--color-primary-200)] dark:border-[var(--color-primary-700)]/50 hover:bg-[var(--color-primary-100)] dark:hover:bg-[var(--color-primary-900)]/30 transition-colors"
+          className="flex-1 py-2 px-3 rounded-lg bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 text-xs font-semibold border border-primary-200 dark:border-primary-700/50 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors"
         >
           🌱 Demo Member
         </button>
@@ -154,7 +153,7 @@ export default function LoginPage() {
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="block text-sm font-medium text-foreground">Password</label>
-            <Link href="/auth/forgot-password" className="text-xs text-[var(--color-primary-600)] dark:text-[var(--color-primary-400)] hover:underline">
+            <Link href="/auth/forgot-password" className="text-xs text-primary-600 dark:text-primary-400 hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -196,7 +195,7 @@ export default function LoginPage() {
 
       <p className="text-center text-sm text-muted-foreground mt-7">
         Don&apos;t have an account?{" "}
-        <Link href="/auth/register" className="text-[var(--color-primary-600)] dark:text-[var(--color-primary-400)] font-semibold hover:underline">
+        <Link href="/auth/register" className="text-primary-600 dark:text-primary-400 font-semibold hover:underline">
           Create one free
         </Link>
       </p>
